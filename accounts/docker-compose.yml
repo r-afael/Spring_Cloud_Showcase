@@ -1,0 +1,29 @@
+
+services:
+
+  accounts:
+    image: 5nowcone/accounts:latest
+    mem_limit: 700m
+    ports:
+      - "8080:8080"
+    networks:
+      - rafalbank-network
+
+  loans:
+    image: 5nowcone/loans:latest
+    mem_limit: 700m
+    ports:
+      - "8090:8090"
+    networks:
+      - rafalbank-network
+
+  cards:
+    image: 5nowcone/cards:latest
+    mem_limit: 700m
+    ports:
+      - "9000:9000"
+    networks:
+      - rafalbank-network
+
+networks:
+  rafalbank-network:
