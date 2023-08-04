@@ -1,7 +1,12 @@
 package com.rafael.accounts.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.rafael.accounts.config.AccountsServiceConfig;
 import com.rafael.accounts.model.Account;
 import com.rafael.accounts.model.Customer;
+import com.rafael.accounts.model.Properties;
 import com.rafael.accounts.repository.AccountRepository;
 import com.rafael.accounts.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +25,17 @@ import java.util.Optional;
 public class AccountsController {
 
     @Autowired
-    private AccountRepository accountRepository;
+    AccountsServiceConfig accountsConfig;
+
+    private final AccountService accountService;
+
+    private final AccountRepository accountRepository;
 
     @Autowired
-    private AccountService accountService;
+    public AccountsController(AccountService accountService, AccountRepository accountRepository) {
+        this.accountService = accountService;
+        this.accountRepository = accountRepository;
+    }
 
     /*
       Todo:
@@ -45,5 +57,14 @@ public class AccountsController {
         } else {
             return new ResponseEntity<>(accountOpt.get(), HttpStatus.OK);
         }
+    }
+
+    @GetMapping("/account/properties")
+    public String getPropertyDetails() throws JsonProcessingException {
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        Properties properties = new Properties(accountsConfig.getMsg(), accountsConfig.getBuildVersion(),
+                accountsConfig.getMailDetails(), accountsConfig.getActiveBranches());
+        String jsonStr = ow.writeValueAsString(properties);
+        return jsonStr;
     }
 }

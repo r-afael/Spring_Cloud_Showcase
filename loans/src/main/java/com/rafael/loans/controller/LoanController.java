@@ -1,7 +1,12 @@
 package com.rafael.loans.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.rafael.loans.config.LoansServiceConfig;
 import com.rafael.loans.model.Customer;
 import com.rafael.loans.model.Loan;
+import com.rafael.loans.model.Properties;
 import com.rafael.loans.service.LoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +23,8 @@ import java.util.Map;
 @RestController
 public class LoanController {
 
+    @Autowired
+    LoansServiceConfig loansConfig;
     private final LoanService loanService;
 
     @Autowired
@@ -44,5 +51,14 @@ public class LoanController {
         } else {
             return ResponseEntity.ok(loans);
         }
+    }
+
+    @GetMapping("/loans/properties")
+    public String getPropertyDetails() throws JsonProcessingException {
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        Properties properties = new Properties(loansConfig.getMsg(), loansConfig.getBuildVersion(),
+                loansConfig.getMailDetails(), loansConfig.getActiveBranches());
+        String jsonStr = ow.writeValueAsString(properties);
+        return jsonStr;
     }
 }
