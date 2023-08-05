@@ -4,37 +4,38 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.rafael.accounts.config.AccountsServiceConfig;
-import com.rafael.accounts.model.Account;
-import com.rafael.accounts.model.Customer;
-import com.rafael.accounts.model.Properties;
+import com.rafael.accounts.model.*;
 import com.rafael.accounts.repository.AccountRepository;
 import com.rafael.accounts.service.AccountService;
+import com.rafael.accounts.client.CardsFeignClient;
+import com.rafael.accounts.client.LoansFeignClient;
+import jakarta.el.PropertyNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @RestController
 public class AccountsController {
-
-    @Autowired
-    AccountsServiceConfig accountsConfig;
-
+    private final AccountsServiceConfig accountsConfig;
+    private final LoansFeignClient loansFeignClient;
+    private final CardsFeignClient cardsFeignClient;
     private final AccountService accountService;
-
     private final AccountRepository accountRepository;
 
     @Autowired
-    public AccountsController(AccountService accountService, AccountRepository accountRepository) {
+    public AccountsController(AccountService accountService, AccountRepository accountRepository,  AccountsServiceConfig accountsConfig,
+                              LoansFeignClient loansFeignClient, CardsFeignClient cardsFeignClient) {
         this.accountService = accountService;
         this.accountRepository = accountRepository;
+        this.accountsConfig = accountsConfig;
+        this.loansFeignClient = loansFeignClient;
+        this.cardsFeignClient = cardsFeignClient;
     }
 
     /*
@@ -66,5 +67,38 @@ public class AccountsController {
                 accountsConfig.getMailDetails(), accountsConfig.getActiveBranches());
         String jsonStr = ow.writeValueAsString(properties);
         return jsonStr;
+    }
+
+    @PostMapping("/myCustomerDetails")
+    public CustomerDetails myCustomerDetails(@RequestBody Customer customer) {
+        //Todo: Move relevant code to service class and return a ResponseEntity
+        Optional<Account> accountOpt = accountRepository.findByCustomerId(customer.getCustomerId());
+        if (accountOpt.isEmpty()) {
+            throw new PropertyNotFoundException("No account for customer with id: " + customer.getCustomerId());
+        }
+        Account account = accountOpt.get();
+
+        ResponseEntity<?> loansResponse = loansFeignClient.getLoansDetails(customer);
+        validateResponse(loansResponse);
+        List<Loan> loans = (List<Loan>) loansResponse.getBody();
+
+        ResponseEntity<?> cardsResponse = cardsFeignClient.getCardDetails(customer);
+        validateResponse(cardsResponse);
+        List<Card> cards = (List<Card>) cardsResponse.getBody();
+
+        CustomerDetails customerDetails = new CustomerDetails();
+        customerDetails.setAccount(account);
+        customerDetails.setLoans(loans);
+        customerDetails.setCards(cards);
+
+        return customerDetails;
+    }
+
+    private void validateResponse(ResponseEntity<?> response) {
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            Map<String, String> errorResponse = (Map<String, String>) response.getBody();
+            String errorMessage = errorResponse.get("message");
+            throw new PropertyNotFoundException(errorMessage);
+        }
     }
 }
