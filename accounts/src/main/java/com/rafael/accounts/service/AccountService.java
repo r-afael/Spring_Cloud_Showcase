@@ -32,23 +32,23 @@ public class AccountService {
     }
 
     //Makes request to the Loads Service using Feign
-    public List<Loan> getLoansDetails(Customer customer) {
-        ResponseEntity<?> loansResponse = loansFeignClient.getLoansDetails(customer);
+    public List<Loan> getLoansDetails(String correlationId, Customer customer) {
+        ResponseEntity<?> loansResponse = loansFeignClient.getLoansDetails(correlationId, customer);
         validateResponse(loansResponse);
         return (List<Loan>) loansResponse.getBody();
     }
 
     //Makes request to the Cards Service using Feign
-    public List<Card> getCardsDetails(Customer customer) {
-        ResponseEntity<?> cardsResponse = cardsFeignClient.getCardDetails(customer);
+    public List<Card> getCardsDetails(String correlationId, Customer customer) {
+        ResponseEntity<?> cardsResponse = cardsFeignClient.getCardDetails(correlationId, customer);
         validateResponse(cardsResponse);
         return (List<Card>) cardsResponse.getBody();
     }
 
-    public CustomerDetails getCustomerDetails(Customer customer) {
+    public CustomerDetails getCustomerDetails(String correlationId, Customer customer) {
         Account account = getAccountByCustomerId(customer.getCustomerId());
-        List<Loan> loans = getLoansDetails(customer);
-        List<Card> cards = getCardsDetails(customer);
+        List<Loan> loans = getLoansDetails(correlationId, customer);
+        List<Card> cards = getCardsDetails(correlationId, customer);
 
         CustomerDetails customerDetails = new CustomerDetails();
         customerDetails.setAccount(account);
@@ -59,9 +59,9 @@ public class AccountService {
     }
 
     //Dummy method to test a fallback for when Cards Service is not available, making calls only to Loans Service
-    public CustomerDetails customerDetailsFallback(Customer customer, Throwable t) {
+    public CustomerDetails customerDetailsFallback(String correlationId, Customer customer, Throwable t) {
         Account account = this.getAccountByCustomerId(customer.getCustomerId());
-        List<Loan> loans = this.getLoansDetails(customer);
+        List<Loan> loans = this.getLoansDetails(correlationId, customer);
 
         CustomerDetails customerDetails = new CustomerDetails();
         customerDetails.setAccount(account);

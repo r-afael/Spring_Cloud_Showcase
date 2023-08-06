@@ -14,5 +14,5 @@ import java.util.List;
 @FeignClient("loans")
 public interface LoansFeignClient {
     @RequestMapping(method = RequestMethod.POST, value = "myLoans", consumes = "application/json")
-    ResponseEntity<?> getLoansDetails(@RequestBody Customer customer);
+    ResponseEntity<?> getLoansDetails(@RequestHeader("rafaelbank-correlation-id") String correlationId, @RequestBody Customer customer);
 }

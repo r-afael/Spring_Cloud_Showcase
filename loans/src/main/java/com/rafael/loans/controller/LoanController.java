@@ -11,10 +11,7 @@ import com.rafael.loans.service.LoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +38,7 @@ public class LoanController {
      - This might apply to other controllers in this project.
    */
     @PostMapping("/myLoans")
-    public ResponseEntity<?> getLoansDetails(@RequestBody Customer customer) {
+    public ResponseEntity<?> getLoansDetails(@RequestHeader("rafaelbank-correlation-id") String correlationId, @RequestBody Customer customer) {
         int customerId = customer.getCustomerId();
         List<Loan> loans = loanService.findLoansByCustomerId(customerId);
         if (loans.isEmpty()) {

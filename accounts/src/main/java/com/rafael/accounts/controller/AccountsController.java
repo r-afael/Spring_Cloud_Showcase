@@ -15,10 +15,7 @@ import jakarta.el.PropertyNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -67,9 +64,9 @@ public class AccountsController {
     @PostMapping("/myCustomerDetails")
     /*@Retry(name = "retryForCustomerDetails", fallbackMethod = "myCustomerDetailsFallBack")*/
     @CircuitBreaker(name = "detailsForCustomerSupportApp", fallbackMethod = "customerDetailsFallback")
-    public CustomerDetails myCustomerDetails(@RequestBody Customer customer) {
+    public CustomerDetails myCustomerDetails(@RequestHeader("rafaelbank-correlation-id") String correlationId, @RequestBody Customer customer) {
         //Todo: return a ResponseEntity and add try catch
-        return accountService.getCustomerDetails(customer);
+        return accountService.getCustomerDetails(correlationId, customer);
     }
 
     //Tests Rate Limiter to protect APIs from too many requests, you can try this by refreshing the page multiple times
@@ -80,8 +77,8 @@ public class AccountsController {
     }
 
     //Fallback method called from the Circuit Breaker
-    private CustomerDetails customerDetailsFallback(Customer customer, Throwable t) {
-        return accountService.customerDetailsFallback(customer, t);
+    private CustomerDetails customerDetailsFallback(@RequestHeader("rafaelbank-correlation-id") String correlationId, Customer customer, Throwable t) {
+        return accountService.customerDetailsFallback(correlationId, customer, t);
     }
 
     //Fallback method called from the Rate Limiter

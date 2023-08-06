@@ -9,10 +9,7 @@ import com.rafael.cards.service.CardsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,7 +42,7 @@ public class CardsController {
         - This might apply to other controllers in this project.
      */
     @PostMapping("/myCards")
-    public ResponseEntity<?> getCardDetails(@RequestBody Customer customer) {
+    public ResponseEntity<?> getCardDetails(@RequestHeader("rafaelbank-correlation-id") String correlationId, @RequestBody Customer customer) {
         int customerId = customer.getCustomerId();
         List<Card> cards = cardsService.getCardsByCustomerId(customerId);
 
