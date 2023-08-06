@@ -1,5 +1,7 @@
 package com.rafael.gatewayserver;
 
+import com.rafael.gatewayserver.trace.logging.ObservationContextSnapshotLifter;
+import io.micrometer.context.ContextSnapshot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -45,6 +47,15 @@ public class GatewayserverApplication {
 						.filters(f -> f.rewritePath("/rafaelbank/cards/(?<segment>.*)","/${segment}")
 								.addResponseHeader("X-Response-Time",new Date().toString()))
 						.uri("lb://CARDS")).build();
+	}
+
+	@ConditionalOnClass({ContextSnapshot.class, Hooks.class})
+	@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
+	@Bean
+	public ApplicationListener<ContextRefreshedEvent> reactiveObservableHook() {
+		return event -> Hooks.onEachOperator(
+				ObservationContextSnapshotLifter.class.getSimpleName(),
+				Operators.lift(ObservationContextSnapshotLifter.lifter()));
 	}
 
 

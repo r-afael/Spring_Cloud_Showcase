@@ -6,6 +6,8 @@ import com.rafael.cards.model.Customer;
 import com.rafael.cards.model.Properties;
 import com.rafael.cards.repository.CardsRepository;
 import com.rafael.cards.service.CardsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +23,7 @@ import java.util.Map;
 
 @RestController
 public class CardsController {
-
+    private static final Logger logger = LoggerFactory.getLogger(CardsController.class);
     //Todo: Remove field injection of the repository from the controller
     @Autowired
     private CardsRepository cardsRepository;
@@ -43,6 +45,7 @@ public class CardsController {
      */
     @PostMapping("/myCards")
     public ResponseEntity<?> getCardDetails(@RequestHeader("rafaelbank-correlation-id") String correlationId, @RequestBody Customer customer) {
+        logger.info("getCardDetails() method started");
         int customerId = customer.getCustomerId();
         List<Card> cards = cardsService.getCardsByCustomerId(customerId);
 
@@ -51,6 +54,7 @@ public class CardsController {
             errorResponse.put("message", "No cards found for customer ID: " + customerId);
             return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
         } else {
+            logger.info("getCardDetails() method ended");
             return new ResponseEntity<>(cards, HttpStatus.OK);
         }
     }

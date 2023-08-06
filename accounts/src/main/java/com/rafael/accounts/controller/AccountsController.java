@@ -12,6 +12,8 @@ import com.rafael.accounts.service.AccountService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.el.PropertyNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import java.util.Map;
 
 @RestController
 public class AccountsController {
+    private static final Logger logger = LoggerFactory.getLogger(AccountsController.class);
     private final AccountsServiceConfig accountsConfig;
     private final AccountService accountService;
 
@@ -66,6 +69,7 @@ public class AccountsController {
     @CircuitBreaker(name = "detailsForCustomerSupportApp", fallbackMethod = "customerDetailsFallback")
     public CustomerDetails myCustomerDetails(@RequestHeader("rafaelbank-correlation-id") String correlationId, @RequestBody Customer customer) {
         //Todo: return a ResponseEntity and add try catch
+        logger.info("myCustomerDetails() method started");
         return accountService.getCustomerDetails(correlationId, customer);
     }
 
