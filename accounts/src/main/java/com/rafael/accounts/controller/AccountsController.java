@@ -11,6 +11,7 @@ import com.rafael.accounts.model.Properties;
 import com.rafael.accounts.service.AccountService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.micrometer.core.annotation.Timed;
 import jakarta.el.PropertyNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,7 @@ public class AccountsController {
         - This might apply to other controllers in this project.
      */
     @GetMapping("/myAccount")
+    @Timed(value = "getAccountDetails.time", description = "Time taken to return Account Details")
     public ResponseEntity<?> getAccountByCustomerId(@RequestBody Customer customer) {
         try {
             Account account = accountService.getAccountByCustomerId(customer.getCustomerId());
