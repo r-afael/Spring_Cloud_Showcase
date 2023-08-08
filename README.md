@@ -129,4 +129,4 @@ While Swagger is not set, here is a quick temporary guide of how you can access 
 
 ## Project Overview (With Screenshots)
 
-🚧🚧**WIP**🚧🚧
+🚧**WIP**🚧
