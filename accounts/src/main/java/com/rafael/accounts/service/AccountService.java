@@ -31,7 +31,7 @@ public class AccountService {
         return accountOpt.orElseThrow(() -> new PropertyNotFoundException("No account for customer with id: " + customerId));
     }
 
-    //Makes request to the Loads Service using Feign
+    //Makes request to the Loads Service using Feign (A more modern approach would be
     public List<Loan> getLoansDetails(String correlationId, Customer customer) {
         ResponseEntity<?> loansResponse = loansFeignClient.getLoansDetails(correlationId, customer);
         validateResponse(loansResponse);

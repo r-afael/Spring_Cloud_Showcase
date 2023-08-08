@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class AccountsController {
@@ -79,7 +80,9 @@ public class AccountsController {
     @GetMapping("/sayHello")
     @RateLimiter(name = "sayHello", fallbackMethod = "sayHelloFallback")
     public String sayHello() {
-        return "Hello, this is the standard return";
+        Optional<String> podName = Optional.ofNullable(System.getenv("HOSTNAME"));
+        return "Hello, this is the standard return. You are accessing through Kubernetes pod of id: "
+                + (podName.orElse("No id -> Project wasn't initialized in a cluster"));
     }
 
     //Fallback method called from the Circuit Breaker

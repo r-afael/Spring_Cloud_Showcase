@@ -1,0 +1,27 @@
+dependencies:
+- name: 5nowcone-common
+  repository: file://../../5nowcone-common
+  version: 0.1.0
+- name: zipkin
+  repository: file://../../5nowcone-services/zipkin
+  version: 0.1.0
+- name: configserver
+  repository: file://../../5nowcone-services/configserver
+  version: 0.1.0
+- name: eurekaserver
+  repository: file://../../5nowcone-services/eurekaserver
+  version: 0.1.0
+- name: accounts
+  repository: file://../../5nowcone-services/accounts
+  version: 0.1.0
+- name: cards
+  repository: file://../../5nowcone-services/cards
+  version: 0.1.0
+- name: loans
+  repository: file://../../5nowcone-services/loans
+  version: 0.1.0
+- name: gatewayserver
+  repository: file://../../5nowcone-services/gatewayserver
+  version: 0.1.0
+digest: sha256:5f7f88b077c3ce4a5a1ab8582f5da01e1e48a18352cfcbfb173bec9127bf940c
+generated: "2023-08-07T19:00:34.9709215-03:00"
