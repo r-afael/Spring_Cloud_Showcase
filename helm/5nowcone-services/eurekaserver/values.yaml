@@ -10,6 +10,10 @@ image:
   repository: 5nowcone/eurekaserver
   tag: latest
 
+resources:
+  requests:
+    memory: "750Mi"
+
 containerPort: 8070
 
 service:

@@ -5,11 +5,15 @@ deploymentName: accounts-deployment
 deploymentLabel: accounts
 appName: accounts
 
-replicaCount: 2
+replicaCount: 1
 
 image:
   repository: 5nowcone/accounts
   tag: latest
+
+resources:
+  requests:
+    memory: "750Mi"
 
 containerPort: 8080
 

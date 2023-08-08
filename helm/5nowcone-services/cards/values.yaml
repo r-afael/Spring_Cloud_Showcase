@@ -11,6 +11,10 @@ image:
   repository: 5nowcone/cards
   tag: latest
 
+resources:
+  requests:
+    memory: "750Mi"  
+
 containerPort: 9000
 
 service:

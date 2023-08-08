@@ -11,6 +11,10 @@ image:
   repository: 5nowcone/gatewayserver
   tag: latest
 
+resources:
+  requests:
+    memory: "750Mi"
+
 containerPort: 8072
 
 service:

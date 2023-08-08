@@ -11,6 +11,10 @@ image:
   repository: 5nowcone/loans
   tag: latest
 
+resources:
+  requests:
+    memory: "750Mi"  
+
 containerPort: 8090
 
 service:

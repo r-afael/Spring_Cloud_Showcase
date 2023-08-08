@@ -9,6 +9,10 @@ image:
   repository: 5nowcone/configserver
   tag: latest
 
+resources:
+  requests:
+    memory: "750Mi"
+
 containerPort: 8071
 
 service:
