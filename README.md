@@ -1,3 +1,4 @@
+
 # Microservices Showcase
 
 
@@ -67,16 +68,65 @@ The prerequisites for running the project vary depending on your deployment envi
 - Helm 
 
 
+
 ### Running the Project
 
-**WIP**
+Follow these steps to get the project up and running if you with to run with Docker Compose:
+
+1. **Ensure Docker is Installed and running**: If you don't have Docker installed, you can download and install it from [Docker's official website](https://www.docker.com/get-started).
+
+2. **Navigate to the Project Directory**: Open your terminal or command prompt and navigate to the root directory of the project.
+
+3. **Move to the Monitoring Folder**: Enter the following command to navigate to the "docker-compose/monitoring" folder:
+ ```cd docker-compose/monitoring```
+ 
+4. **Run Docker Compose**: Now, you can start all the services defined in the "docker-compose.yml" file with the following command:
+```docker-compose up```
+or for the detached mode without logs:
+```docker-compose up -d```
+
+5. **Verify the Services**: Please wait around 5 minutes to make sure all the services have properly started. You can verify that all the services are running by executing:
+```docker-compose ps```
+6. **Access the Application**: Depending on your configuration, your application and monitoring tools should now be accessible via your browser at the specified URLs.
+
+~~**Follow these steps** to get the project up and running if you with to run with Minikube:~~  
+
+~~Running multiple pods in a local cluster can be a resource intensive task, so please make sure you have at least 7GB of ram available before following this approach:~~
+
+🚧🚧**WIP** 🚧🚧
+1. To start your Minikube cluster, execute 
+``` minikube start --memory 7168 --cpus 4```
+2. From the root project directory, in your helm\environments, execute:
+``` helm install dev-deployment .\dev-env\```
+3. To see if the services have successfully started, execute:
+```kubectl get services```
+(*Some pods might fail if you haven't allocated enough memory to Minikube*)
+
+
+
 
 ## API Documentation
 
-**WIP**
+🚧🚧**WIP** 🚧🚧
+While Swagger is not set, here is a quick temporary guide of how you can access the services:
+
+### Running on Docker:
+- Eureka: http://localhost:8070/
+- Zipkin: http://localhost:9411/zipkin/
+- Grafana: http://localhost:3000/
+- Prometheus: http://localhost:9090/
+- Spring API Gateway: http://localhost:8072/actuator/gateway/routes
+- Spring Cloud Config: http://localhost:8071/accounts/dev - or any other service name such as /cards/prod
+- Accounts Service: http://localhost:8080/sayHello - or any other endpoint (WIP Documentation)
+- Loads Service: http://localhost:8090/loans/properties - or any other endpoint (WIP Documentation)
+- Cards Service: http://localhost:9000/cards/properties - or any other endpoint (WIP Documentation)
+
+### Running on a Kubernetes Cluster (Minikube or Cloud):
+- With your minikube cluster running, execute 
+- ``` minikube start --memory 8000 --cpus 5```
 
 
 
 ## Project Overview (With Screenshots)
 
-**WIP**
+🚧🚧**WIP**🚧🚧
