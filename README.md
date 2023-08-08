@@ -93,7 +93,7 @@ or for the detached mode without logs:
 
 ~~Running multiple pods in a local cluster can be a resource intensive task, so please make sure you have at least 7GB of ram available before following this approach:~~
 
-🚧🚧**WIP** 🚧🚧
+🚧**WIP**🚧
 1. To start your Minikube cluster, execute 
 ``` minikube start --memory 7168 --cpus 4```
 2. From the root project directory, in your helm\environments, execute:
@@ -107,7 +107,7 @@ or for the detached mode without logs:
 
 ## API Documentation
 
-🚧🚧**WIP** 🚧🚧
+🚧**WIP**🚧
 While Swagger is not set, here is a quick temporary guide of how you can access the services:
 
 ### Running on Docker:
